@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Anime } from '../types';
 import { animes } from '../data/animes';
 import AdBanner from './AdBanner';
@@ -19,11 +19,19 @@ const FilmsPage: React.FC<FilmsPageProps> = ({ searchQuery = '', onPlayAnime, on
     return isFilm && matchesSearch;
   });
 
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://www.profitableratecpm.com/qeith0eve?key=645019c901b69978a1618a62f5ed5571';
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <div className="min-h-screen bg-black pt-20">
       <div className="max-w-7xl mx-auto px-8 py-12">
         {/* Bannière publicitaire avant le titre */}
         <AdBanner id="filmsTop" />
+
         
         {/* Header */}
         <div className="mb-12">
