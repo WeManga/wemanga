@@ -6,7 +6,7 @@ interface AdBannerProps {
 }
 
 const urls: { [key: string]: string } = {
-  homeTop: 'https://www.profitableratecpm.com/your-original-url',
+  homeTop: 'https://www.profitableratecpm.com/w10hh3jj?key=c6bcdb41a9c6df1077cf7048072493e5',
   homeClassics: 'https://www.profitableratecpm.com/q5gvxneh?key=0fcb2820527b80ee08f776218cee82d9',
   homeCatalog: 'https://www.profitableratecpm.com/f5dcmeijf?key=ae05b8e83b116293e4e9dfcae2b98c14',
   homeBottom: 'https://www.profitableratecpm.com/jd3u29qy?key=a77bac4003cf2f4a2e675dfc206fff89',
