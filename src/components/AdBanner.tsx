@@ -8,7 +8,7 @@ const AdBanner: React.FC<AdBannerProps> = ({ className = '' }) => {
   useEffect(() => {
     // Script pour charger les publicités
     const script = document.createElement('script');
-    script.src = 'https://www.profitableratecpm.com/z8jj97wv?key=21713001843103ea1def6c2e4b45be45';
+    script.src = 'https://www.profitableratecpm.com/qnm0xxxg?key=3cdf1798a23c2bc6dddb02cf02fc23f0';
     script.async = true;
     document.head.appendChild(script);
 
