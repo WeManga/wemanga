@@ -158,7 +158,7 @@ const FilmsPage: React.FC<FilmsPageProps> = ({ searchQuery = '', onPlayAnime, on
       </div>
      
      {/* Bannière publicitaire avant Footer */}
-     <AdBanner />
+     <AdBanner id="filmsBottom" />
     </div>
   );
 };
