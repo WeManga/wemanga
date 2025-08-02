@@ -180,7 +180,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       </div>
 
       {/* Bannière pub après le lecteur */}
-      <AdBanner />
+      <AdBanner id="playerBottom" />
     </div>
   );
 };
