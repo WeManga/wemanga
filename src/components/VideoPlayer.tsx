@@ -105,7 +105,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       )}
 
       {/* Bannière pub avant le lecteur */}
-      <AdBanner />
+      <AdBanner id="playerTop" />
 
       {/* Titre de l’épisode */}
       <div className="flex justify-center mb-6">
