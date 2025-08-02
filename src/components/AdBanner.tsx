@@ -53,7 +53,7 @@ const AdBanner: React.FC<AdBannerProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`min-h-[100px] w-full my-6 bg-transparent ${className}`}
+      className={`min-h-[100px] w-full my-8 bg-black ${className}`}
     />
   );
 };
