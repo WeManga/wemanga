@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React from 'react';
 
 interface AdBannerProps {
   id: string;
@@ -18,23 +18,22 @@ const urls: { [key: string]: string } = {
   playerBottom: 'https://www.profitableratecpm.com/bkn63wpz?key=74d6b49d2b10bfdc736f8e970982c4c4',
 };
 
-const AdBanner = ({ id, className = '' }: AdBannerProps) => {
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = urls[id];
-    script.async = true;
-    script.type = 'text/javascript';
-
-    // Injecte directement dans <body>
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script); // nettoyage
-    };
-  }, [id]);
+const AdBanner: React.FC<AdBannerProps> = ({ id, className }) => {
+  const url = urls[id];
+  if (!url) return null;
 
   return (
-    <div className={`my-6 min-h-[100px] w-full ${className}`} />
+    <div className={`w-full flex justify-center my-6 ${className || ''}`}>
+      <iframe
+        src={url}
+        width="728"
+        height="90"
+        style={{ border: 'none', overflow: 'hidden' }}
+        scrolling="no"
+        frameBorder="0"
+        allow="autoplay"
+      />
+    </div>
   );
 };
 
