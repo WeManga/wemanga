@@ -19,18 +19,29 @@ const FilmsPage: React.FC<FilmsPageProps> = ({ searchQuery = '', onPlayAnime, on
     return isFilm && matchesSearch;
   });
 
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://www.profitableratecpm.com/qeith0eve?key=645019c901b69978a1618a62f5ed5571';
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
+useEffect(() => {
+  const script = document.createElement('script');
+  script.src = 'https://www.profitableratecpm.com/qeith0eve?key=645019c901b69978a1618a62f5ed5571';
+  script.async = true;
+  const target = document.getElementById('test-ads');
+  if (target) {
+    target.innerHTML = ''; // vide le placeholder
+    target.appendChild(script);
+  } else {
+    console.warn('Élément #test-ads introuvable.');
+  }
+}, []);
 
   return (
     <div className="min-h-screen bg-black pt-20">
       <div className="max-w-7xl mx-auto px-8 py-12">
         {/* Bannière publicitaire avant le titre */}
-        <AdBanner id="filmsTop" />
+        <div className="my-8">
+  <div id="test-ads" className="w-full min-h-[100px] bg-gray-800 text-white flex items-center justify-center">
+    Chargement de la publicité...
+  </div>
+</div>
+
 
         
         {/* Header */}
