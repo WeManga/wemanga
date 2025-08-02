@@ -34,12 +34,12 @@ const AdBanner: React.FC<AdBannerProps> = ({
     };
   }, [url]);
 
-  return (
-    <div
-      ref={containerRef}
-      className={`min-h-[100px] w-full ${className}`}
-    />
-  );
-};
+return (
+  <div
+    ref={containerRef}
+    className={`min-h-[100px] w-full my-6 ${className}`}
+  />
+);
+
 
 export default AdBanner;
