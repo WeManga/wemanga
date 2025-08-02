@@ -273,7 +273,7 @@ const HomePage: React.FC<HomePageProps> = ({ filter, onPlayAnime, onAnimeDetail,
           )}
 
           {/* Bannière publicitaire avant Nouveautés */}
-          {!searchQuery && <AdBanner />}
+          <AdBanner id="homeTop" />
 
           {/* Section Nouveautés */}
           {!searchQuery && nouveautes.length > 0 && (
