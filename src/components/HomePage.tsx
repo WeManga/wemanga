@@ -386,7 +386,7 @@ const HomePage: React.FC<HomePageProps> = ({ filter, onPlayAnime, onAnimeDetail,
           )}
 
           {/* Bannière publicitaire avant Les Classiques */}
-          {!searchQuery && <AdBanner />}
+          <AdBanner id="homeClassics" />
 
           {/* Section Les Classiques */}
           {!searchQuery && classiques.length > 0 && (
@@ -499,7 +499,7 @@ const HomePage: React.FC<HomePageProps> = ({ filter, onPlayAnime, onAnimeDetail,
           )}
 
           {/* Bannière publicitaire avant Catalogue Complet */}
-          {!searchQuery && autresAnimes.length > 0 && <AdBanner />}
+          <AdBanner id="homeCatalog" />
 
           {/* Section Autres Animes (si pas de catégorie spécifique) */}
           {!searchQuery && autresAnimes.length > 0 && (
@@ -613,7 +613,7 @@ const HomePage: React.FC<HomePageProps> = ({ filter, onPlayAnime, onAnimeDetail,
         </div>
         
         {/* Bannière publicitaire avant Footer */}
-        <AdBanner />
+        <AdBanner id="homeBottom" />
         
         <Footer />
       </div>
