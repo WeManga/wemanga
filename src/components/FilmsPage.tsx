@@ -23,7 +23,7 @@ const FilmsPage: React.FC<FilmsPageProps> = ({ searchQuery = '', onPlayAnime, on
     <div className="min-h-screen bg-black pt-20">
       <div className="max-w-7xl mx-auto px-8 py-12">
         {/* Bannière publicitaire avant le titre */}
-        <AdBanner />
+        <AdBanner id="filmsTop" />
         
         {/* Header */}
         <div className="mb-12">
