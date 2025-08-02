@@ -24,7 +24,7 @@ const SeriesPage: React.FC<SeriesPageProps> = ({ searchQuery = '', onPlayAnime, 
     <div className="min-h-screen bg-black pt-20">
       <div className="max-w-7xl mx-auto px-8 py-12"> 
         {/* Bannière publicitaire avant le titre */}
-        <AdBanner />
+        <AdBanner id="seriesTop" />
         
         {/* Header */}
         <div className="mb-12">
@@ -166,7 +166,7 @@ const SeriesPage: React.FC<SeriesPageProps> = ({ searchQuery = '', onPlayAnime, 
       </div>
       
       {/* Bannière publicitaire avant Footer */}
-      <AdBanner />
+      <AdBanner id="seriesBottom" />
     </div>
   );
 };
