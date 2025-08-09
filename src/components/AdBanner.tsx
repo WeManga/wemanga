@@ -7,7 +7,7 @@ interface AdBannerProps {
 
 const urls: { [key: string]: string } = {
   homeTop: 'https://otieu.com/4/9691962',
-  homeClassics: 'https://www.profitableratecpm.com/q5gvxneh?key=0fcb2820527b80ee08f776218cee82d9',
+  homeClassics: 'https://otieu.com/4/9692384',
   homeCatalog: 'https://www.profitableratecpm.com/f5dcmeijf?key=ae05b8e83b116293e4e9dfcae2b98c14',
   homeBottom: 'https://www.profitableratecpm.com/jd3u29qy?key=a77bac4003cf2f4a2e675dfc206fff89',
   seriesTop: 'https://www.profitableratecpm.com/h33ns6axj?key=79c42dfb3c0d602f602329dc68c40c12',
