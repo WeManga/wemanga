@@ -24,10 +24,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onProgress,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const bannerUrl = season?.banner || episode.thumbnail || "";
-  const [showAd, setShowAd] = useState(false);
-  const [videoStarted, setVideoStarted] = useState(false);
   const adContainerRef = useRef<HTMLDivElement>(null);
+  const bannerUrl = season?.banner || episode.thumbnail || "";
+  const [adLoaded, setAdLoaded] = useState(false);
 
   const getVideoType = (url: string) => {
     if (!url) return null;
@@ -56,6 +55,23 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     };
   }, [onProgress, videoType]);
 
+  // Fonction pour injecter le script pub
+  const loadAdScript = () => {
+    if (adContainerRef.current) {
+      adContainerRef.current.innerHTML = ""; // Reset la pub
+      const script = document.createElement("script");
+      script.src = "https://groleegni.net/401/9692467";
+      script.async = true;
+      adContainerRef.current.appendChild(script);
+      setAdLoaded(true);
+    }
+  };
+
+  // Quand l'utilisateur clique sur play, on recharge la pub
+  const handlePlayClick = () => {
+    loadAdScript();
+  };
+
   const getEmbedUrl = () => {
     try {
       if (videoType === "youtube") {
@@ -76,31 +92,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     } catch {
       return null;
     }
-  };
-
-  // Insère ton script pub dans le container adContainerRef
-  useEffect(() => {
-    if (showAd && adContainerRef.current) {
-      adContainerRef.current.innerHTML = "";
-      const script = document.createElement("script");
-      script.src = "https://groleegni.net/401/9692467";
-      script.async = true;
-      adContainerRef.current.appendChild(script);
-    }
-  }, [showAd]);
-
-  const handleVideoPlayAttempt = (e: React.SyntheticEvent<HTMLVideoElement>) => {
-    if (!videoStarted) {
-      e.preventDefault();
-      videoRef.current?.pause();
-      setShowAd(true);
-    }
-  };
-
-  const onAdClosed = () => {
-    setShowAd(false);
-    setVideoStarted(true);
-    videoRef.current?.play();
   };
 
   return (
@@ -130,6 +121,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         />
       )}
 
+      {/* Conteneur pub injecté ici (en dehors du lecteur) */}
+      <div
+        ref={adContainerRef}
+        style={{ width: "100%", maxWidth: 728, height: 90, margin: "0 auto", marginBottom: 24 }}
+        aria-label="Publicité"
+      />
+
       {/* Titre de l’épisode */}
       <div className="flex justify-center mb-6">
         <div className="bg-black/70 px-6 py-2 rounded-lg text-xl font-semibold shadow-md">
@@ -138,30 +136,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       </div>
 
       {/* Lecteur vidéo */}
-      <div className="w-full max-w-4xl mx-auto rounded-xl overflow-hidden bg-[#111] shadow-lg relative">
+      <div className="w-full max-w-4xl mx-auto rounded-xl overflow-hidden bg-[#111] shadow-lg">
         <div className="relative pb-[56.25%]">
-          {showAd && (
-            <div
-              className="absolute inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center text-center p-4"
-              ref={adContainerRef}
-            >
-              {/* Pub injectée par script */}
-              <button
-                onClick={onAdClosed}
-                className="mt-6 px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold"
-              >
-                Fermer la pub et lire la vidéo
-              </button>
-            </div>
-          )}
-
           {videoType === "video" && (
             <video
               ref={videoRef}
               src={episode.videoUrl}
               controls
-              onPlay={handleVideoPlayAttempt}
+              autoPlay
               className="absolute top-0 left-0 w-full h-full"
+              onPlay={handlePlayClick}
             />
           )}
 
