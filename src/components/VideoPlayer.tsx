@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Episode, Season } from "../types";
-import AdBanner from "./AdBanner";
 import ScrollingMessage from "./ScrollingMessage";
 
 interface VideoPlayerProps {
@@ -28,6 +27,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const bannerUrl = season?.banner || episode.thumbnail || "";
   const [showAd, setShowAd] = useState(false);
   const [videoStarted, setVideoStarted] = useState(false);
+  const adContainerRef = useRef<HTMLDivElement>(null);
 
   const getVideoType = (url: string) => {
     if (!url) return null;
@@ -78,16 +78,25 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   };
 
-  // Gestion du clic play vidéo
+  // Insère ton script pub dans le container adContainerRef
+  useEffect(() => {
+    if (showAd && adContainerRef.current) {
+      adContainerRef.current.innerHTML = "";
+      const script = document.createElement("script");
+      script.src = "https://groleegni.net/401/9692467";
+      script.async = true;
+      adContainerRef.current.appendChild(script);
+    }
+  }, [showAd]);
+
   const handleVideoPlayAttempt = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     if (!videoStarted) {
       e.preventDefault();
       videoRef.current?.pause();
-      setShowAd(true); // Affiche la pub avant lecture
+      setShowAd(true);
     }
   };
 
-  // Quand l'utilisateur ferme la pub, lance la vidéo
   const onAdClosed = () => {
     setShowAd(false);
     setVideoStarted(true);
@@ -121,9 +130,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         />
       )}
 
-      {/* Bannière pub avant le lecteur */}
-      {!showAd && <AdBanner id="playerTop" />}
-
       {/* Titre de l’épisode */}
       <div className="flex justify-center mb-6">
         <div className="bg-black/70 px-6 py-2 rounded-lg text-xl font-semibold shadow-md">
@@ -135,9 +141,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       <div className="w-full max-w-4xl mx-auto rounded-xl overflow-hidden bg-[#111] shadow-lg relative">
         <div className="relative pb-[56.25%]">
           {showAd && (
-            <div className="absolute inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center text-center p-4">
-              {/* Intègre ici ton composant de pub */}
-              <AdBanner id="preRollAd" />
+            <div
+              className="absolute inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center text-center p-4"
+              ref={adContainerRef}
+            >
+              {/* Pub injectée par script */}
               <button
                 onClick={onAdClosed}
                 className="mt-6 px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold"
@@ -154,7 +162,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
               controls
               onPlay={handleVideoPlayAttempt}
               className="absolute top-0 left-0 w-full h-full"
-              // Retiré autoPlay pour contrôler le lancement
             />
           )}
 
@@ -209,9 +216,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           </button>
         </div>
       </div>
-
-      {/* Bannière pub après le lecteur */}
-      {!showAd && <AdBanner id="playerBottom" />}
     </div>
   );
 };
