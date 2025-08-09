@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Episode, Season } from "../types";
 import AdBanner from "./AdBanner";
 import ScrollingMessage from "./ScrollingMessage";
@@ -26,20 +26,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const bannerUrl = season?.banner || episode.thumbnail || "";
-
-  // Intégration du script pub dans la page, au montage seulement
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://groleegni.net/401/9692467";
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  // ... tout le reste de ton code inchangé
+  const [showAd, setShowAd] = useState(false);
+  const [videoStarted, setVideoStarted] = useState(false);
 
   const getVideoType = (url: string) => {
     if (!url) return null;
@@ -90,10 +78,28 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   };
 
+  // Gestion du clic play vidéo
+  const handleVideoPlayAttempt = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    if (!videoStarted) {
+      e.preventDefault();
+      videoRef.current?.pause();
+      setShowAd(true); // Affiche la pub avant lecture
+    }
+  };
+
+  // Quand l'utilisateur ferme la pub, lance la vidéo
+  const onAdClosed = () => {
+    setShowAd(false);
+    setVideoStarted(true);
+    videoRef.current?.play();
+  };
+
   return (
     <div className="bg-black min-h-screen text-white font-sans pb-10">
+      {/* Message déroulant */}
       <ScrollingMessage />
 
+      {/* Bouton retour */}
       <div className="px-6 pt-14">
         <button
           onClick={onBack}
@@ -103,6 +109,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         </button>
       </div>
 
+      {/* Bannière visuelle */}
       {bannerUrl && (
         <div
           className="w-full h-[220px] mt-4 mb-4"
@@ -114,44 +121,58 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         />
       )}
 
-      <AdBanner id="playerTop" />
+      {/* Bannière pub avant le lecteur */}
+      {!showAd && <AdBanner id="playerTop" />}
 
+      {/* Titre de l’épisode */}
       <div className="flex justify-center mb-6">
         <div className="bg-black/70 px-6 py-2 rounded-lg text-xl font-semibold shadow-md">
           {episode.title}
         </div>
       </div>
 
-      <div className="w-full max-w-4xl mx-auto rounded-xl overflow-hidden bg-[#111] shadow-lg">
+      {/* Lecteur vidéo */}
+      <div className="w-full max-w-4xl mx-auto rounded-xl overflow-hidden bg-[#111] shadow-lg relative">
         <div className="relative pb-[56.25%]">
+          {showAd && (
+            <div className="absolute inset-0 bg-black bg-opacity-90 z-50 flex flex-col items-center justify-center text-center p-4">
+              {/* Intègre ici ton composant de pub */}
+              <AdBanner id="preRollAd" />
+              <button
+                onClick={onAdClosed}
+                className="mt-6 px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold"
+              >
+                Fermer la pub et lire la vidéo
+              </button>
+            </div>
+          )}
+
           {videoType === "video" && (
             <video
               ref={videoRef}
               src={episode.videoUrl}
               controls
-              autoPlay
+              onPlay={handleVideoPlayAttempt}
               className="absolute top-0 left-0 w-full h-full"
+              // Retiré autoPlay pour contrôler le lancement
             />
           )}
 
-          {(videoType === "youtube" ||
-            videoType === "vimeo" ||
-            videoType === "sendvid") &&
-            (() => {
-              const embedUrl = getEmbedUrl();
-              return embedUrl ? (
-                <iframe
-                  src={embedUrl}
-                  title="Video Player"
-                  frameBorder="0"
-                  allow="autoplay; fullscreen"
-                  allowFullScreen
-                  className="absolute top-0 left-0 w-full h-full"
-                />
-              ) : (
-                <p className="absolute top-0">Impossible de charger la vidéo</p>
-              );
-            })()}
+          {(videoType === "youtube" || videoType === "vimeo" || videoType === "sendvid") && (() => {
+            const embedUrl = getEmbedUrl();
+            return embedUrl ? (
+              <iframe
+                src={embedUrl}
+                title="Video Player"
+                frameBorder="0"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+                className="absolute top-0 left-0 w-full h-full"
+              />
+            ) : (
+              <p className="absolute top-0">Impossible de charger la vidéo</p>
+            );
+          })()}
 
           {videoType === "sibnet" && (
             <iframe
@@ -165,6 +186,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           )}
         </div>
 
+        {/* Navigation épisodes */}
         <div className="flex justify-between items-center px-4 py-3 bg-[#222]">
           <button
             onClick={onPreviousEpisode}
@@ -188,7 +210,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         </div>
       </div>
 
-      <AdBanner id="playerBottom" />
+      {/* Bannière pub après le lecteur */}
+      {!showAd && <AdBanner id="playerBottom" />}
     </div>
   );
 };
