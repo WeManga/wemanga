@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Episode, Season } from "../types";
+import AdBanner from "./AdBanner";
 import ScrollingMessage from "./ScrollingMessage";
 
 interface VideoPlayerProps {
@@ -24,9 +25,20 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   onProgress,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const adContainerRef = useRef<HTMLDivElement>(null);
   const bannerUrl = season?.banner || episode.thumbnail || "";
-  const [adLoaded, setAdLoaded] = useState(false);
+
+  // Injecte le script pub une fois au montage
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://groleegni.net/401/9692467";
+    script.async = true;
+    document.body.appendChild(script);
+
+    // Cleanup au démontage (optionnel)
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const getVideoType = (url: string) => {
     if (!url) return null;
@@ -54,23 +66,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       videoEl.removeEventListener("timeupdate", handleTimeUpdate);
     };
   }, [onProgress, videoType]);
-
-  // Fonction pour injecter le script pub
-  const loadAdScript = () => {
-    if (adContainerRef.current) {
-      adContainerRef.current.innerHTML = ""; // Reset la pub
-      const script = document.createElement("script");
-      script.src = "https://groleegni.net/401/9692467";
-      script.async = true;
-      adContainerRef.current.appendChild(script);
-      setAdLoaded(true);
-    }
-  };
-
-  // Quand l'utilisateur clique sur play, on recharge la pub
-  const handlePlayClick = () => {
-    loadAdScript();
-  };
 
   const getEmbedUrl = () => {
     try {
@@ -121,12 +116,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         />
       )}
 
-      {/* Conteneur pub injecté ici (en dehors du lecteur) */}
-      <div
-        ref={adContainerRef}
-        style={{ width: "100%", maxWidth: 728, height: 90, margin: "0 auto", marginBottom: 24 }}
-        aria-label="Publicité"
-      />
+      {/* Bannière pub avant le lecteur */}
+      <AdBanner id="playerTop" />
 
       {/* Titre de l’épisode */}
       <div className="flex justify-center mb-6">
@@ -145,7 +136,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
               controls
               autoPlay
               className="absolute top-0 left-0 w-full h-full"
-              onPlay={handlePlayClick}
             />
           )}
 
@@ -200,6 +190,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Bannière pub après le lecteur */}
+      <AdBanner id="playerBottom" />
     </div>
   );
 };
